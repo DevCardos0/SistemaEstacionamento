@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/global.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/dashboard.css') }}">
+
+</head>
+
+<body>
+
+<div class="conteudo">
+
+<div class="menu-btn" style="position:fixed; top:20px; left:20px;" onclick="abrirMenu()">☰</div>
+
+<div class="cards">
+
+<div class="card">
+
+<h2>🅿️ Vagas</h2>
+
+<h1>30</h1>
+
+</div>
+
+<div class="card">
+
+<h2>🟩 Livres</h2>
+
+<h1>{{ livres }}</h1>
+
+</div>
+
+<div class="card">
+
+<h2>🟥 Ocupadas</h2>
+
+<h1>{{ ocupadas }}</h1>
+
+</div>
+
+<div class="card">
+
+<h2>💰 Receita</h2>
+
+<h1>R$ {{ "%.2f"|format(receita) }}</h1>
+
+</div>
+
+</div>
+
+<div class="painel">
+
+<div class="card">
+
+<h2>➕ Cadastrar Entrada</h2>
+
+<form method="POST" action="/cadastrar_veiculo" class="formulario">
+
+<input type="text" name="nome" placeholder="Nome do Proprietário" required>
+
+<input type="text" name="placa" placeholder="Placa" required>
+
+<select name="tipo" required>
+
+<option value="Carro">Carro</option>
+
+<option value="Moto">Moto</option>
+
+<option value="Caminhão">Caminhão</option>
+
+</select>
+
+<input type="text" name="vaga" placeholder="Vaga (ex: A1)" required>
+
+<button type="submit">Cadastrar</button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>🅿️ Vagas Ocupadas</h2>
+
+<div class="vagas">
+
+{% set ocupadas_map = {} %}
+{% for v in veiculos %}
+{% set _ = ocupadas_map.update({v.vaga: v}) %}
+{% endfor %}
+
+{% for i in range(1,31) %}
+{% set vaga_id = 'A' ~ i %}
+{% if vaga_id in ocupadas_map %}
+{% set v = ocupadas_map[vaga_id] %}
+
+<div class="vaga ocupada">
+
+<span>{{ vaga_id }}</span>
+
+<small>Nome: {{ v.proprietario }}</small>
+
+<small>Placa: {{ v.placa }}</small>
+
+<small>{{ v.tipo }}</small>
+
+
+<a href="/saida/{{ v.id }}" style="margin-top:8px; display:inline-block; background:#2563eb; color:#fff; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700;">Registrar saída</a>
+
+</div>
+
+{% else %}
+
+<div class="vaga livre">
+
+<span>{{ vaga_id }}</span>
+
+<small>Livre</small>
+
+</div>
+
+{% endif %}
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<aside class="sidebar" id="sidebar">
+
+<div class="logo">
+
+<h1 style="font-family:'Georgia',serif; letter-spacing:1px;">🚗 Parking Padre Longino</h1>
+
+</div>
+
+<a href="/dashboard">Dashboard</a>
+
+<a href="/historico">Histórico</a>
+
+<a href="/perfil">Perfil</a>
+
+<a href="/terminar_mes" style="margin-top:8px; background:#2563eb;">📅 Terminar mês</a>
+
+<a href="/logout">Sair</a>
+
+</aside>
+
+<script src="{{ url_for('static',filename='js/script.js') }}"></script>
+
+</body>
+
+</html>
+

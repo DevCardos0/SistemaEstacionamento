@@ -1,0 +1,95 @@
+.container{
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+.box{
+
+width:450px;
+
+padding:50px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(20px);
+
+border-radius:25px;
+
+box-shadow:0 20px 50px rgba(0,0,0,.4);
+
+animation:entrada 1s;
+
+}
+
+@keyframes entrada{
+
+from{
+
+opacity:0;
+
+transform:translateY(50px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.box h1{
+
+text-align:center;
+
+font-size:42px;
+
+margin-bottom:10px;
+
+}
+
+.box p{
+
+text-align:center;
+
+margin-bottom:30px;
+
+}
+
+.box form{
+
+display:flex;
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+.box button{
+
+background:#2563eb;
+
+color:white;
+
+font-size:18px;
+
+}
+
+.box a{
+
+text-align:center;
+
+color:#60a5fa;
+
+}

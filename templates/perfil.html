@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Perfil</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='css/global.css') }}">
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='css/perfil.css') }}">
+
+</head>
+
+<body>
+
+<a href="/dashboard" class="voltar">
+⬅ Voltar ao Menu
+</a>
+
+<div class="perfil-container">
+
+<div class="card">
+
+<h1>👤 Administrador</h1>
+
+<p style="font-family:'Georgia',serif;">Sistema Parking Padre Longino</p>
+
+<br>
+
+<p>Total arrecadado:
+R$ {{ "%.2f"|format(receita) }}</p>
+
+<p>Total de veículos:
+{{ total }}</p>
+
+</div>
+
+<div class="estatisticas">
+
+<div class="card">
+
+<h2>🅿️ Vagas</h2>
+
+<h1>30</h1>
+
+</div>
+
+<div class="card">
+
+<h2>🟩 Livres</h2>
+
+<h1>{{ livres }}</h1>
+
+</div>
+
+<div class="card">
+
+<h2>🟥 Ocupadas</h2>
+
+<h1>{{ ocupadas }}</h1>
+
+</div>
+
+<div class="card">
+
+<h2>💰 Receita</h2>
+
+<h1>R$ {{ "%.2f"|format(receita) }}</h1>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

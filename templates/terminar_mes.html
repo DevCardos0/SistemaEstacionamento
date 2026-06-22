@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Terminar mês</title>
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/global.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/perfil.css') }}">
+
+</head>
+
+<body>
+
+<a href="/dashboard" class="voltar">
+⬅ Voltar ao Menu
+</a>
+
+<div class="perfil-container">
+
+<div class="card">
+
+<h1>📅 Estatísticas do mês</h1>
+
+{% if mensagem %}
+
+<div class="card" style="margin-top:15px;">
+
+<p style="font-size:18px; font-weight:700;">{{ mensagem }}</p>
+
+</div>
+
+{% endif %}
+
+<br>
+
+<h2>Veículos</h2>
+
+<p>Carros: <b>{{ carros }}</b></p>
+
+<p>Motos: <b>{{ motos }}</b></p>
+
+<p>SUV: <b>{{ suvs }}</b></p>
+
+<p>Caminhões: <b>{{ caminhoes }}</b></p>
+
+<br>
+
+<h2>Rendimento</h2>
+
+<p>R$ no mês: <b>R$ {{ "%.2f"|format(rendimento_mes) }}</b></p>
+
+<p>R$ no mês passado: <b>R$ {{ "%.2f"|format(rendimento_mes_passado) }}</b></p>
+
+{% if perc_mudanca is not none %}
+
+<p>Variação: <b>{{ perc_mudanca }}%</b></p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+

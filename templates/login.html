@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Login</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='css/global.css') }}">
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='css/login.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="box">
+
+<h1 style="font-family:'Georgia',serif; letter-spacing:1px;">🚗 Parking Padre Longino</h1>
+
+<p>Sistema Inteligente de Estacionamento</p>
+
+<form method="POST">
+
+<input
+type="text"
+name="usuario"
+placeholder="Usuário"
+required>
+
+<input
+type="password"
+name="senha"
+placeholder="Senha"
+required>
+
+<button type="submit">
+
+Entrar
+
+</button>
+
+</form>
+
+<br>
+
+<a href="/cadastro">
+
+Criar Conta
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

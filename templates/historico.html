@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Histórico</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='css/global.css') }}">
+
+</head>
+
+<body>
+
+<a href="/dashboard" class="voltar">
+⬅ Voltar ao Menu
+</a>
+
+<div style="padding:40px">
+
+<h1>📋 Histórico</h1>
+
+<div style="display:flex; gap:15px; flex-wrap:wrap; margin:20px 0;">
+
+<form method="POST" action="/historico/limpar" style="margin:0;">
+<button type="submit" style="background:#dc2626; color:#fff;">Limpar histórico</button>
+</form>
+
+<form method="GET" action="/historico/relatorio" style="margin:0;">
+<button type="submit" style="background:#2563eb; color:#fff;">Ver dias trabalhados e rendimento</button>
+</form>
+
+</div>
+
+{% if dias_trabalhados is not none %}
+<div class="card" style="margin-bottom:20px;">
+<h2>📊 Resumo</h2>
+<p>Dias trabalhados: <b>{{ dias_trabalhados }}</b></p>
+<p>Rendimento total: <b>R$ {{ "%.2f"|format(rendimento_total) }}</b></p>
+</div>
+{% endif %}
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Nome</th>
+<th>Placa</th>
+<th>Entrada</th>
+<th>Saída</th>
+<th>Valor</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for veiculo in veiculos %}
+
+<tr>
+
+<td>{{ veiculo.proprietario }}</td>
+
+<td>{{ veiculo.placa }}</td>
+
+<td>{{ veiculo.entrada }}</td>
+
+<td>{{ veiculo.saida }}</td>
+
+<td>R$ {{ "%.2f"|format(veiculo.valor) }}</td>
+
+<td>
+
+{% if veiculo.pago %}
+Pago
+{% else %}
+Pendente
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
