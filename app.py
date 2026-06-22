@@ -390,12 +390,31 @@ def terminar_mes():
 
 
 # ==================================
+# CRIA BANCO AUTOMATICAMENTE
+# ==================================
+
+with app.app_context():
+    db.create_all()
+
+    # cria usuário admin caso não exista
+    admin = Usuario.query.filter_by(
+        usuario="admin"
+    ).first()
+
+    if not admin:
+        admin = Usuario(
+            nome="Administrador",
+            usuario="admin",
+            email="admin@smartparking.com",
+            senha=generate_password_hash("123456")
+        )
+
+        db.session.add(admin)
+        db.session.commit()
+
+# ==================================
 # INICIAR SERVIDOR
 # ==================================
 
 if __name__ == "__main__":
-
-    with app.app_context():
-        db.create_all()
-
     app.run(debug=True)
