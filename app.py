@@ -8,8 +8,13 @@ import calendar
 app = Flask(__name__)
 
 
+import os
+
 app.config["SECRET_KEY"] = "smartparking123"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+
+db_path = os.path.join("/tmp", "database.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -384,13 +389,13 @@ def terminar_mes():
     )
 
 
-with app.app_context():
-    db.create_all()
-
-
 # ==================================
 # INICIAR SERVIDOR
 # ==================================
 
 if __name__ == "__main__":
+
+    with app.app_context():
+        db.create_all()
+
     app.run(debug=True)
