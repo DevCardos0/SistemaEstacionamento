@@ -21,38 +21,69 @@
 
 <div class="cards">
 
-<div class="card">
+  <div class="card stat">
+    <h2>🅿️ Vagas</h2>
+    <h1>30</h1>
+  </div>
 
-<h2>🅿️ Vagas</h2>
+  <div class="card stat">
+    <h2>🟩 Livres</h2>
+    <h1>{{ livres }}</h1>
+  </div>
 
-<h1>30</h1>
+  <div class="card stat">
+    <h2>🟥 Ocupadas</h2>
+    <h1>{{ ocupadas }}</h1>
+  </div>
 
-</div>
-
-<div class="card">
-
-<h2>🟩 Livres</h2>
-
-<h1>{{ livres }}</h1>
-
-</div>
-
-<div class="card">
-
-<h2>🟥 Ocupadas</h2>
-
-<h1>{{ ocupadas }}</h1>
+  <div class="card stat">
+    <h2>💰 Receita</h2>
+    <h1>R$ {{ "%.2f"|format(receita) }}</h1>
+  </div>
 
 </div>
 
-<div class="card">
+<div class="grafico-card">
+  <div class="grafico-header">
+    <h2>📈 Ganhos (mês vs mês passado)</h2>
+    <div class="grafico-badge">
+      {% if perc_mudanca is not none %}
+        {% if perc_mudanca >= 0 %}
+          <span class="badge badge-pos">▲ {{ "%.2f"|format(perc_mudanca) }}%</span>
+        {% else %}
+          <span class="badge badge-neg">▼ {{ "%.2f"|format(perc_mudanca) }}%</span>
+        {% endif %}
+      {% else %}
+        <span class="badge badge-neutral">—</span>
+      {% endif %}
+    </div>
+  </div>
 
-<h2>💰 Receita</h2>
+  <div class="grafico-body">
+    {% set max_val = [rendimento_mes, rendimento_mes_passado, 1]|max %}
 
-<h1>R$ {{ "%.2f"|format(receita) }}</h1>
+    <div class="chart">
+      <div class="chart-grid" aria-hidden="true"></div>
 
-</div>
+      <div class="chart-bar-wrap">
+        <div class="chart-col">
+          <div class="chart-bar-label">Mês atual</div>
+          <div class="chart-bar-bg">
+            <div class="chart-bar chart-bar-atual" style="height: {{ (rendimento_mes / max_val) * 100 }}%"></div>
+          </div>
+          <div class="chart-bar-value">R$ {{ "%.2f"|format(rendimento_mes) }}</div>
+        </div>
 
+        <div class="chart-col">
+          <div class="chart-bar-label">Mês passado</div>
+          <div class="chart-bar-bg">
+            <div class="chart-bar chart-bar-passado" style="height: {{ (rendimento_mes_passado / max_val) * 100 }}%"></div>
+          </div>
+          <div class="chart-bar-value">R$ {{ "%.2f"|format(rendimento_mes_passado) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="painel">
@@ -89,47 +120,55 @@
 
 <h2>🅿️ Vagas Ocupadas</h2>
 
-<div class="vagas">
+<div class="vagas-section">
+  <div class="vagas-header">
+    <h2>🗺️ Mapa de Vagas</h2>
+    <div class="legenda">
+      <span class="leg item-livre"><span class="dot"></span> Livre</span>
+      <span class="leg item-ocupada"><span class="dot"></span> Ocupada</span>
+    </div>
+  </div>
 
-{% set ocupadas_map = {} %}
-{% for v in veiculos %}
-{% set _ = ocupadas_map.update({v.vaga: v}) %}
-{% endfor %}
+  <div class="vagas">
+    {% set ocupadas_map = {} %}
+    {% for v in veiculos %}
+    {% set _ = ocupadas_map.update({v.vaga: v}) %}
+    {% endfor %}
 
-{% for i in range(1,31) %}
-{% set vaga_id = 'A' ~ i %}
-{% if vaga_id in ocupadas_map %}
-{% set v = ocupadas_map[vaga_id] %}
+    {% for i in range(1,31) %}
+    {% set vaga_id = 'A' ~ i %}
+    {% if vaga_id in ocupadas_map %}
+    {% set v = ocupadas_map[vaga_id] %}
 
-<div class="vaga ocupada">
+    <div class="vaga ocupada" data-vaga="{{ vaga_id }}">
+      <div class="vaga-top">
+        <span class="vaga-id">{{ vaga_id }}</span>
+        <span class="badge badge-ocupada">OCUPADA</span>
+      </div>
+      <div class="vaga-body">
+        <small class="meta">{{ v.tipo }}</small>
+        <small class="meta"><strong>Nome:</strong> {{ v.proprietario }}</small>
+        <small class="meta"><strong>Placa:</strong> {{ v.placa }}</small>
+      </div>
+      <a class="btn-saida" href="/saida/{{ v.id }}">Registrar saída</a>
+    </div>
 
-<span>{{ vaga_id }}</span>
+    {% else %}
 
-<small>Nome: {{ v.proprietario }}</small>
+    <div class="vaga livre" data-vaga="{{ vaga_id }}">
+      <div class="vaga-top">
+        <span class="vaga-id">{{ vaga_id }}</span>
+        <span class="badge badge-livre">LIVRE</span>
+      </div>
+      <div class="vaga-body">
+        <small class="meta">Pronta para uso</small>
+      </div>
+    </div>
 
-<small>Placa: {{ v.placa }}</small>
+    {% endif %}
 
-<small>{{ v.tipo }}</small>
-
-
-<a href="/saida/{{ v.id }}" style="margin-top:8px; display:inline-block; background:#2563eb; color:#fff; padding:10px 16px; border-radius:12px; text-decoration:none; font-weight:700;">Registrar saída</a>
-
-</div>
-
-{% else %}
-
-<div class="vaga livre">
-
-<span>{{ vaga_id }}</span>
-
-<small>Livre</small>
-
-</div>
-
-{% endif %}
-
-{% endfor %}
-
+    {% endfor %}
+  </div>
 </div>
 
 </div>

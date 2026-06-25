@@ -12,7 +12,10 @@ import os
 
 app.config["SECRET_KEY"] = "smartparking123"
 
-db_path = os.path.join("/tmp", "database.db")
+db_dir = os.path.join(os.path.dirname(__file__), "instance")
+os.makedirs(db_dir, exist_ok=True)
+
+db_path = os.path.join(db_dir, "database.db")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -113,16 +116,53 @@ def dashboard():
     ocupadas = len(veiculos)
     livres = 30 - ocupadas
 
+    # Receita total (todas as entradas/saídas registradas)
     receita = sum(
         v.valor for v in Veiculo.query.all()
     )
+
+    # Receita do mês atual vs mês passado (considera v.entrada)
+    now = datetime.now()
+    ano_atual, mes_atual = now.year, now.month
+    if mes_atual == 1:
+        mes_passado = 12
+        ano_passado = ano_atual - 1
+    else:
+        mes_passado = mes_atual - 1
+        ano_passado = ano_atual
+
+    rendimento_mes = 0.0
+    rendimento_mes_passado = 0.0
+
+    for v in veiculos:
+        if not v.entrada:
+            continue
+        try:
+            dt = datetime.strptime(v.entrada, "%d/%m/%Y %H:%M")
+        except ValueError:
+            continue
+
+        y, m = dt.year, dt.month
+        valor = float(v.valor or 0)
+
+        if y == ano_atual and m == mes_atual:
+            rendimento_mes += valor
+        if y == ano_passado and m == mes_passado:
+            rendimento_mes_passado += valor
+
+    perc_mudanca = None
+    if rendimento_mes_passado and rendimento_mes_passado != 0:
+        perc_mudanca = ((rendimento_mes - rendimento_mes_passado) / rendimento_mes_passado) * 100
 
     return render_template(
         "dashboard.html",
         veiculos=veiculos,
         ocupadas=ocupadas,
         livres=livres,
-        receita=receita
+        receita=receita,
+        rendimento_mes=rendimento_mes,
+        rendimento_mes_passado=rendimento_mes_passado,
+        perc_mudanca=perc_mudanca
     )
 
 # ==================================
