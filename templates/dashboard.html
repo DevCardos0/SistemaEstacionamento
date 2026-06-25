@@ -150,7 +150,9 @@
         <small class="meta"><strong>Nome:</strong> {{ v.proprietario }}</small>
         <small class="meta"><strong>Placa:</strong> {{ v.placa }}</small>
       </div>
-      <a class="btn-saida" href="/saida/{{ v.id }}">Registrar saída</a>
+      {% if v.id %}
+      <a class="btn-saida" href="{{ url_for('saida', id=v.id) }}">Registrar saída</a>
+      {% endif %}
     </div>
 
     {% else %}

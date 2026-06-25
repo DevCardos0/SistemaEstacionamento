@@ -212,8 +212,9 @@ def cadastrar_veiculo():
 # SAÍDA DE VEÍCULO
 # ==================================
 
-@app.route("/saida/<int:id>")
+@app.route("/saida/<int:id>", methods=["GET"])
 def saida(id):
+
 
     veiculo = Veiculo.query.get_or_404(id)
 
