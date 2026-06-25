@@ -12,10 +12,15 @@ import os
 
 app.config["SECRET_KEY"] = "smartparking123"
 
+# Em serverless (ex: Vercel) o filesystem é efêmero e não é confiável gravar em pastas do projeto.
+# Usamos /tmp para garantir escrita em runtime.
 db_dir = os.path.join(os.path.dirname(__file__), "instance")
-os.makedirs(db_dir, exist_ok=True)
-
 db_path = os.path.join(db_dir, "database.db")
+
+if os.environ.get("VERCEL") or os.environ.get("AWS_EXECUTION_ENV"):
+    db_dir = "/tmp"
+    db_path = os.path.join(db_dir, "database.db")
+os.makedirs(db_dir, exist_ok=True)
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
