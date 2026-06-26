@@ -212,23 +212,33 @@ def cadastrar_veiculo():
 # SAÍDA DE VEÍCULO
 # ==================================
 
-@app.route("/saida/<int:id>", methods=["GET"])
+@app.route("/saida/<int:id>", methods=["GET", "POST"])
 def saida(id):
 
+    # Ajuda a depurar erros no clique do link (especialmente no deploy).
+    if "usuario" not in session:
+        return redirect("/")
 
-    veiculo = Veiculo.query.get_or_404(id)
+    veiculo = Veiculo.query.get(id)
+    if not veiculo:
+        flash("Veículo não encontrado.")
+        return redirect("/dashboard")
 
-    veiculo.saida = datetime.now().strftime(
-        "%d/%m/%Y %H:%M"
-    )
+    # Se já estiver inativo, não quebra — apenas avisa.
+    if not veiculo.ativo:
+        flash("Esta saída já foi registrada.")
+        return redirect("/dashboard")
 
+    veiculo.saida = datetime.now().strftime("%d/%m/%Y %H:%M")
     veiculo.valor = 10.00
     veiculo.pago = True
     veiculo.ativo = False
 
     db.session.commit()
 
+    flash("Saída registrada com sucesso!")
     return redirect("/dashboard")
+
 
 # ==================================
 # HISTÓRICO
